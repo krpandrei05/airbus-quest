@@ -48,6 +48,41 @@ class MainActivity : AppCompatActivity(), LocationListener {
         tvLocation = findViewById(R.id.tvLocation)
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         checkPermissionsAndStartLocation()
+
+        val btnOpenStreetMap: Button = findViewById(R.id.btnOpenStreetMap)
+        btnOpenStreetMap.setOnClickListener {
+            val hasFine = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            val hasCoarse = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+
+            // Check if we have AT LEAST ONE permission (Fine or Coarse)
+            if (hasFine || hasCoarse) {
+                // Permission granted! Try to find the location.
+                var latestLocation: Location? = null
+
+                if (hasFine) {
+                    latestLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                }
+
+                // If GPS failed or we only have Coarse permission, try Network provider
+                if (latestLocation == null) {
+                    latestLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                }
+
+                if (latestLocation != null) {
+                    // Sent real location to the Map Activity
+                    val intent = Intent(this, OpenStreetMapsActivity::class.java)
+
+                    val bundle = Bundle()
+                    bundle.putParcelable("location", latestLocation)
+                    intent.putExtra("locationBundle", bundle)
+
+                    startActivity(intent)
+                } else {
+                    Log.e(MainTAG, "Click: No location found!")
+                    Toast.makeText(this, "Location not found yet. Try outside.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun checkPermissionsAndStartLocation() {
