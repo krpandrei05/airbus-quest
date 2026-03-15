@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- AQI circle on Dashboard: a filled circle whose color is set
+     programmatically based on the current AQI value.
+     Default is grey (no data). In code, use:
+     drawable.setTint(ContextCompat.getColor(this, R.color.aqi_good)) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/aqi_unknown" />
+    <size android:width="64dp" android:height="64dp" />
+</shape>

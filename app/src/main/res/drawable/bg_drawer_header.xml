@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Gradient for the Navigation Drawer header area.
+     Dark forest green to medium green, diagonal gradient.
+     Contains the user's avatar, username, and HP bar. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:startColor="@color/primary"
+        android:endColor="#2E7D32"
+        android:angle="135" />
+</shape>

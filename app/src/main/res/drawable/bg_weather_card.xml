@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Gradient background for the weather/AQI card at the top of Dashboard.
+     Goes from dark forest green to a slightly brighter green,
+     creating visual depth while keeping the "eco" feel. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:startColor="@color/primary"
+        android:endColor="#2E7D32"
+        android:angle="135" />
+    <corners android:radius="@dimen/card_corner_radius" />
+</shape>

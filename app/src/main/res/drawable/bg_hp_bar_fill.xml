@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- HP bar fill: colored capsule that shrinks/grows based on HP.
+     Color is set programmatically:
+       > 60 HP  → @color/hp_excellent (green)
+       30-60 HP → @color/hp_warning (yellow)
+       < 30 HP  → @color/hp_critical (red)
+     Use as a ClipDrawable or just adjust View width % in code. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/hp_excellent" />
+    <corners android:radius="@dimen/hp_bar_corner" />
+</shape>
