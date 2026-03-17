@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ══════════════════════════════════════════════════════════
+     Bottom Navigation Bar — 4 tabs
+     Present on all main screens after login.
+     Active tab: green icon + green label.
+     Inactive tabs: semi-transparent white icon + label.
+     ══════════════════════════════════════════════════════════
+
+     DESIGN NOTE: We chose 4 tabs (not 5) because 4 tabs with
+     icon + label fit comfortably on all screen sizes including
+     small phones. Settings and Logout are in the Drawer instead.
+
+     ICONS: Using Material built-in icons for now.
+     Replace with custom drawables later if desired.
+     ══════════════════════════════════════════════════════════ -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_dashboard"
+        android:icon="@android:drawable/ic_menu_today"
+        android:title="@string/nav_dashboard" />
+
+    <item
+        android:id="@+id/nav_map"
+        android:icon="@android:drawable/ic_menu_mapmode"
+        android:title="@string/nav_map" />
+
+    <item
+        android:id="@+id/nav_report"
+        android:icon="@android:drawable/ic_menu_camera"
+        android:title="@string/nav_report" />
+
+    <item
+        android:id="@+id/nav_history"
+        android:icon="@android:drawable/ic_menu_recent_history"
+        android:title="@string/nav_history" />
+
+</menu>

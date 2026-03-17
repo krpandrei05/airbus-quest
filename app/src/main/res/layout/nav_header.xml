@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ══════════════════════════════════════════════════════════
+     NAVIGATION DRAWER HEADER
+     The top section of the slide-out drawer.
+     Dark gradient background with user's avatar, username,
+     and current character HP bar.
+     ══════════════════════════════════════════════════════════ -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/drawer_header_height"
+    android:background="@drawable/bg_drawer_header"
+    android:orientation="vertical"
+    android:gravity="bottom"
+    android:padding="@dimen/spacing_md">
+
+    <!-- User avatar (small, circular) -->
+    <ImageView
+        android:id="@+id/ivDrawerAvatar"
+        android:layout_width="@dimen/avatar_small"
+        android:layout_height="@dimen/avatar_small"
+        android:src="@android:drawable/ic_menu_myplaces"
+        android:background="@drawable/bg_aqi_circle"
+        android:backgroundTint="@color/accent_dark"
+        android:scaleType="centerCrop"
+        android:contentDescription="Your avatar" />
+
+    <!-- Username -->
+    <TextView
+        android:id="@+id/tvDrawerUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/text_on_dark"
+        android:layout_marginTop="@dimen/spacing_sm" />
+
+    <!-- Character HP info -->
+    <TextView
+        android:id="@+id/tvDrawerHp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="HP: 73/100"
+        android:textSize="13sp"
+        android:textColor="@color/text_on_dark_secondary"
+        android:layout_marginTop="@dimen/spacing_xs" />
+
+</LinearLayout>
