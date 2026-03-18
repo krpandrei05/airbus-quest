@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ══════════════════════════════════════════════════════════
+     MAP FRAGMENT
+     Full-screen OpenStreetMap with:
+       - Colored markers for each EMT station (by AQI)
+       - Pulsing blue dot for user's current location
+       - Legend overlay (top-left) with color meanings
+       - FAB (bottom-right) to re-center on user location
+       - Bottom sheet (hidden) slides up when marker is tapped
+     ══════════════════════════════════════════════════════════ -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- The map fills the entire fragment -->
+    <org.osmdroid.views.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- ═══ LEGEND OVERLAY (top-left) ═══
+         Semi-transparent card with the 4 AQI colors explained -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_margin="@dimen/spacing_sm"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="#E6FFFFFF">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_sm">
+
+            <!-- Good -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+                <View
+                    android:layout_width="@dimen/legend_dot_size"
+                    android:layout_height="@dimen/legend_dot_size"
+                    android:background="@drawable/bg_aqi_circle"
+                    android:backgroundTint="@color/aqi_good" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/legend_good"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginStart="6dp" />
+            </LinearLayout>
+
+            <!-- Moderate -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+                <View
+                    android:layout_width="@dimen/legend_dot_size"
+                    android:layout_height="@dimen/legend_dot_size"
+                    android:background="@drawable/bg_aqi_circle"
+                    android:backgroundTint="@color/aqi_moderate" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/legend_moderate"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginStart="6dp" />
+            </LinearLayout>
+
+            <!-- Unhealthy -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+                <View
+                    android:layout_width="@dimen/legend_dot_size"
+                    android:layout_height="@dimen/legend_dot_size"
+                    android:background="@drawable/bg_aqi_circle"
+                    android:backgroundTint="@color/aqi_unhealthy" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/legend_unhealthy"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginStart="6dp" />
+            </LinearLayout>
+
+            <!-- Hazardous -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <View
+                    android:layout_width="@dimen/legend_dot_size"
+                    android:layout_height="@dimen/legend_dot_size"
+                    android:background="@drawable/bg_aqi_circle"
+                    android:backgroundTint="@color/aqi_hazardous" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/legend_hazardous"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginStart="6dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- ═══ MY LOCATION FAB (bottom-right) ═══ -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabMyLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/spacing_md"
+        android:src="@android:drawable/ic_menu_mylocation"
+        app:backgroundTint="@color/surface"
+        app:tint="@color/accent"
+        app:fabSize="normal"
+        android:contentDescription="Center on my location" />
+
+    <!-- ═══ STATION BOTTOM SHEET (hidden, slides up on marker tap) ═══ -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/bottomSheetStation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:visibility="gone"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="@color/surface">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_md">
+
+            <!-- Handle bar (small grey pill at top of sheet) -->
+            <View
+                android:layout_width="40dp"
+                android:layout_height="4dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/divider"
+                android:layout_marginBottom="@dimen/spacing_md" />
+
+            <!-- Station name and AQI -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvStationName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Castellana"
+                    android:textSize="18sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:textColor="@color/text_primary" />
+
+                <!-- Mini AQI badge -->
+                <FrameLayout
+                    android:layout_width="40dp"
+                    android:layout_height="40dp">
+                    <View
+                        android:id="@+id/viewSheetAqi"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_aqi_circle" />
+                    <TextView
+                        android:id="@+id/tvSheetAqiNum"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="3"
+                        android:textSize="16sp"
+                        android:fontFamily="sans-serif-bold"
+                        android:textColor="@color/text_on_dark" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- Temperature + last update -->
+            <TextView
+                android:id="@+id/tvSheetDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="23°C · Updated 5 min ago"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="4dp" />
+
+            <!-- Last community report (if exists) -->
+            <TextView
+                android:id="@+id/tvSheetReport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sample_report"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginTop="@dimen/spacing_sm" />
+
+            <!-- Report button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnReportStation"
+                style="@style/AirBusButton.Secondary"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:text="@string/btn_report_station"
+                android:layout_marginTop="@dimen/spacing_md" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>

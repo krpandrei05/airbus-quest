@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ══════════════════════════════════════════════════════════
+     REPORT FRAGMENT
+     Vertical scrollable form for reporting a station:
+       1. Station selector (dropdown, auto-detects nearest)
+       2. Photo area (tap to open camera, shows preview)
+       3. Rating bar (1-5 stars with dynamic label)
+       4. Comment field (multiline, optional)
+       5. Submit button (full width, green capsule)
+     ══════════════════════════════════════════════════════════ -->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/screen_margin">
+
+        <!-- ═══ 1. STATION SELECTOR ═══ -->
+        <TextView
+            android:id="@+id/tvNearestStation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nearest station: Castellana (120m away)"
+            android:textSize="13sp"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="@dimen/spacing_sm" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilStation"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/select_station"
+            app:boxCornerRadiusTopStart="@dimen/card_corner_radius"
+            app:boxCornerRadiusTopEnd="@dimen/card_corner_radius"
+            app:boxCornerRadiusBottomStart="@dimen/card_corner_radius"
+            app:boxCornerRadiusBottomEnd="@dimen/card_corner_radius"
+            app:boxStrokeColor="@color/input_stroke_focused"
+            android:layout_marginBottom="@dimen/spacing_lg">
+
+            <AutoCompleteTextView
+                android:id="@+id/actvStation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <!-- ═══ 2. PHOTO AREA ═══ -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Photo evidence"
+            style="@style/AirBusSectionTitle" />
+
+        <!-- Photo placeholder / preview container -->
+        <FrameLayout
+            android:id="@+id/framePhoto"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/photo_area_height"
+            android:background="@drawable/bg_photo_placeholder"
+            android:layout_marginBottom="@dimen/spacing_lg"
+            android:clickable="true"
+            android:focusable="true">
+
+            <!-- Placeholder content (hidden after photo taken) -->
+            <LinearLayout
+                android:id="@+id/layoutPhotoPlaceholder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@android:drawable/ic_menu_camera"
+                    app:tint="@color/text_hint"
+                    android:contentDescription="Camera icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/take_photo"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_hint"
+                    android:layout_marginTop="@dimen/spacing_sm" />
+            </LinearLayout>
+
+            <!-- Photo preview (shown after photo taken, loaded via Glide) -->
+            <ImageView
+                android:id="@+id/ivPhotoPreview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                android:contentDescription="Photo preview" />
+
+            <!-- Retake button (shown after photo taken) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRetake"
+                style="@style/AirBusButton.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|end"
+                android:text="@string/retake"
+                android:textSize="12sp"
+                android:layout_margin="@dimen/spacing_sm"
+                android:visibility="gone" />
+        </FrameLayout>
+
+
+        <!-- ═══ 3. RATING ═══ -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/how_is_air"
+            style="@style/AirBusSectionTitle" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/spacing_lg">
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:stepSize="1"
+                android:rating="0"
+                android:progressTint="@color/star_filled"
+                android:progressBackgroundTint="@color/star_empty"
+                android:secondaryProgressTint="@color/star_empty"
+                style="@android:style/Widget.Material.RatingBar" />
+
+            <!-- Dynamic label that changes based on rating -->
+            <TextView
+                android:id="@+id/tvRatingLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tap to rate"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="@dimen/spacing_sm" />
+        </LinearLayout>
+
+
+        <!-- ═══ 4. COMMENT ═══ -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilComment"
+            style="@style/AirBusInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_comment"
+            app:counterEnabled="true"
+            app:counterMaxLength="200"
+            android:layout_marginBottom="@dimen/spacing_lg">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:maxLines="5"
+                android:gravity="top" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <!-- ═══ 5. SUBMIT BUTTON ═══ -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSubmitReport"
+            style="@style/AirBusButton.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:text="@string/btn_submit_report"
+            android:layout_marginBottom="@dimen/spacing_md" />
+
+    </LinearLayout>
+</ScrollView>

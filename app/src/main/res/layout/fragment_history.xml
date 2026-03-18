@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ══════════════════════════════════════════════════════════
+     HISTORY FRAGMENT (Character List / Game Record)
+     Simple RecyclerView with character cards.
+     Each card shows avatar, name, stats, and alive/dead badge.
+     ══════════════════════════════════════════════════════════ -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCharacters"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/screen_margin"
+        android:clipToPadding="false" />
+
+    <!-- Empty state: shown when no characters exist yet -->
+    <LinearLayout
+        android:id="@+id/layoutEmpty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@android:drawable/ic_menu_myplaces"
+            app:tint="@color/text_hint"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:contentDescription="No characters" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_character_msg"
+            android:textSize="14sp"
+            android:textColor="@color/text_hint"
+            android:textAlignment="center"
+            android:layout_marginTop="@dimen/spacing_md" />
+    </LinearLayout>
+
+</FrameLayout>

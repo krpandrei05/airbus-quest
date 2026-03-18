@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ══════════════════════════════════════════════════════════
+     ITEM: Recommendation card (Dashboard alerts list)
+     Thin horizontal band with:
+       - Colored accent line on left edge (severity color)
+       - Warning icon (colored by severity)
+       - Message text (center)
+       - Timestamp (right)
+     ══════════════════════════════════════════════════════════ -->
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_sm"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="1dp"
+    app:cardBackgroundColor="@color/surface">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Left accent line: color set programmatically based on severity
+             (green/yellow/orange/red via view.setBackgroundColor) -->
+        <View
+            android:id="@+id/viewAccentLine"
+            android:layout_width="@dimen/recommendation_accent_width"
+            android:layout_height="match_parent"
+            android:background="@color/aqi_moderate" />
+
+        <!-- Warning icon -->
+        <ImageView
+            android:id="@+id/ivAlertIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/ic_dialog_alert"
+            app:tint="@color/aqi_moderate"
+            android:layout_marginStart="@dimen/spacing_sm"
+            android:contentDescription="Alert" />
+
+        <!-- Alert message text -->
+        <TextView
+            android:id="@+id/tvAlertMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Station Castellana has AQI 4! Avoid it!"
+            android:textSize="13sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginStart="@dimen/spacing_sm"
+            android:layout_marginEnd="@dimen/spacing_sm"
+            android:paddingTop="@dimen/spacing_sm"
+            android:paddingBottom="@dimen/spacing_sm"
+            android:maxLines="2"
+            android:ellipsize="end" />
+
+        <!-- Timestamp -->
+        <TextView
+            android:id="@+id/tvAlertTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2m"
+            android:textSize="11sp"
+            android:textColor="@color/text_hint"
+            android:layout_marginEnd="@dimen/spacing_sm" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
