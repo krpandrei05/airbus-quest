@@ -1,133 +1,112 @@
 package com.example.project_mad
 
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
-import android.Manifest
-import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 
-class MainActivity : AppCompatActivity(), LocationListener {
-    private val MainTAG = "MainActivity"
+class MainActivity : AppCompatActivity() {
+    private val TAG = "MainActivity"
 
-    private lateinit var locationManager: LocationManager
-    private val locationPermissionCode = 2
-    private lateinit var tvLocation: TextView
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var toolbar: MaterialToolbar
+    private lateinit var bottomNav: BottomNavigationView
+    private lateinit var navView: NavigationView
+    private lateinit var drawerToggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         setContentView(R.layout.activity_main)
 
-        Log.d(MainTAG, "onCreate: MainActivity created!")
+        Log.d(TAG, "onCreate: MainActivity created as shell container")
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        // 1. Toolbar Config
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
-        val btnSecondActivity: Button = findViewById(R.id.btnSecondActivity)
-        btnSecondActivity.setOnClickListener {
-            Log.d(MainTAG, "Click: Going to SecondActivity.")
-            val intent = Intent(this, SecondActivity::class.java)
-            startActivity(intent)
-        }
+        // 2. Drawer Config
+        drawerLayout = findViewById(R.id.drawerLayout)
+        navView = findViewById(R.id.navView)
+        drawerToggle = ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            toolbar,
+            R.string.nav_dashboard,
+            R.string.nav_dashboard
+        )
 
-        tvLocation = findViewById(R.id.tvLocation)
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        checkPermissionsAndStartLocation()
+        drawerLayout.addDrawerListener(drawerToggle)
+        drawerToggle.syncState()
 
-        val btnOpenStreetMap: Button = findViewById(R.id.btnOpenStreetMap)
-        btnOpenStreetMap.setOnClickListener {
-            val hasFine = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-            val hasCoarse = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-
-            // Check if we have AT LEAST ONE permission (Fine or Coarse)
-            if (hasFine || hasCoarse) {
-                // Permission granted! Try to find the location.
-                var latestLocation: Location? = null
-
-                if (hasFine) {
-                    latestLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                }
-
-                // If GPS failed or we only have Coarse permission, try Network provider
-                if (latestLocation == null) {
-                    latestLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                }
-
-                if (latestLocation != null) {
-                    // Sent real location to the Map Activity
-                    val intent = Intent(this, OpenStreetMapsActivity::class.java)
-
-                    val bundle = Bundle()
-                    bundle.putParcelable("location", latestLocation)
-                    intent.putExtra("locationBundle", bundle)
-
+        navView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.drawer_settings -> {
+                    Log.d(TAG, "Drawer: Settings clicked")
+                    val intent = Intent(this, SecondActivity::class.java)
                     startActivity(intent)
-                } else {
-                    Log.e(MainTAG, "Click: No location found!")
-                    Toast.makeText(this, "Location not found yet. Try outside.", Toast.LENGTH_SHORT).show()
+                }
+
+                R.id.drawer_about -> {
+                    Log.d(TAG, "Drawer: About clicked")
+                    val intent = Intent(this, ThirdActivity::class.java)
+                    startActivity(intent)
+                }
+
+                R.id.drawer_logout -> {
+                    Log.d(TAG, "Drawer: Logout clicked")
                 }
             }
+            drawerLayout.closeDrawers()
+            true
         }
-    }
 
-    private fun checkPermissionsAndStartLocation() {
-        val hasFine = ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-        val hasCoarse = ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-
-        if (!hasFine && !hasCoarse) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
-                locationPermissionCode
-            )
-        }
-        else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == locationPermissionCode) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
+        // 3. Bottom Navigation Config
+        bottomNav = findViewById(R.id.bottomNav)
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_dashboard -> {
+                    loadFragment(DashboardFragment())
+                    toolbar.title = getString(R.string.dashboard_title)
+                    true
                 }
-            } else {
-                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
+                R.id.nav_map -> {
+                    loadFragment(MapFragment())
+                    toolbar.title = getString(R.string.map_title)
+                    true
+                }
+                R.id.nav_report -> {
+                    loadFragment(ReportFragment())
+                    toolbar.title = getString(R.string.report_title)
+                    true
+                }
+                R.id.nav_history -> {
+                    loadFragment(HistoryFragment())
+                    toolbar.title = getString(R.string.history_title)
+                    true
+                }
+                else -> false
             }
         }
+
+        // Initial State/Fragment
+        if (savedInstanceState == null) {
+            bottomNav.selectedItemId = R.id.nav_dashboard
+        }
     }
 
-    override fun onLocationChanged(location: Location) {
-        tvLocation.text = "Latitude: ${location.latitude}, Longitude: ${location.longitude}"
-        Log.i(MainTAG, "Location updated: ${location.latitude}, ${location.longitude}")
+    // Helper
+    private fun loadFragment(fragment: Fragment) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .commit()
+        Log.d(TAG, "Fragment loaded: ${fragment.javaClass.simpleName}")
     }
-
-    override fun onProviderEnabled(provider: String) {}
-    override fun onProviderDisabled(provider: String) {}
-    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
 }

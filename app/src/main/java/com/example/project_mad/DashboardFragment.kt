@@ -1,0 +1,103 @@
+package com.example.project_mad
+
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
+
+class DashboardFragment : Fragment(), LocationListener {
+    private val TAG = "DashboardFragment"
+
+    private lateinit var locationManager: LocationManager
+    private lateinit var tvLocation: TextView
+    private lateinit var tvTemperature: TextView
+    private lateinit var tvAirQuality: TextView
+
+    private val locationPermissionCode = 2
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_dashboard, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        Log.d(TAG, "onViewCreated: DashboardFragment ready")
+
+        tvLocation = view.findViewById(R.id.tvLocation)
+        tvTemperature = view.findViewById(R.id.tvTemperature)
+        tvAirQuality = view.findViewById(R.id.tvAirQuality)
+
+        locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        checkPermissionsAndStartLocation()
+    }
+
+    private fun checkPermissionsAndStartLocation() {
+        val hasFine = ActivityCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        val hasCoarse = ActivityCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        if (!hasFine && !hasCoarse) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                locationPermissionCode
+            )
+        } else {
+            locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                5000,
+                5f,
+                this
+            )
+            Log.d(TAG, "GPS started")
+        }
+    }
+
+    override fun onLocationChanged(location: Location) {
+        Log.i(TAG, "Location: ${location.latitude}, ${location.longitude}")
+
+        tvLocation.text = "Lat: %.4f, Long: %.4f".format(location.latitude, location.longitude)
+
+        // Placeholder
+        tvTemperature.text = "--°C"
+        tvAirQuality.text = "Waiting for AQI data"
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        locationManager.removeUpdates(this)
+        Log.d(TAG, "GPS stopped (fragment destroyed)")
+    }
+
+    @Deprecated("Deprecated in API")
+    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
+
+    override fun onProviderEnabled(provider: String) {}
+    override fun onProviderDisabled(provider: String) {}
+}
