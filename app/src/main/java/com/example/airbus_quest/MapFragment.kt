@@ -1,4 +1,4 @@
-package com.example.project_mad
+package com.example.airbus_quest
 
 import android.content.Context
 import android.graphics.Color
@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -45,7 +44,7 @@ class MapFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated: Map ready")
 
-        Configuration.getInstance().userAgentValue = "com.example.project_mad"
+        Configuration.getInstance().userAgentValue = "com.example.airbus_quest"
         Configuration.getInstance().load(
             requireContext().applicationContext,
             requireContext().getSharedPreferences("osm", Context.MODE_PRIVATE)

@@ -3,13 +3,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.project_mad"
+    namespace = "com.example.airbus_quest"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.example.project_mad"
+        applicationId = "com.example.airbus_quest"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

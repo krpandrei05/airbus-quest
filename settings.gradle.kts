@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "project-mad"
+rootProject.name = "airbus-quest"
 include(":app")

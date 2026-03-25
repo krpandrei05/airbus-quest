@@ -1,4 +1,4 @@
-package com.example.project_mad
+package com.example.airbus_quest
 
 import org.junit.Test
 
