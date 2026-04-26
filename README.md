@@ -97,20 +97,19 @@ cd project-mad
 
 ### 2. Set up EMT credentials (important!)
 
-Normally, an app talking to the EMT Madrid API should authenticate with a ClientId/PassKey pair assigned by EMT. We applied for those, but our request was never processed in time — so we had to work around it by logging in with a regular user account directly. The app uses **our personal EMT accounts** to authenticate, which is why you won't find valid credentials committed in the repo. You'll need to create your own.
+The app uses the official EMT Madrid MobilityLabs API with ClientId/PassKey authentication.
 
-- Sign up for a free account at https://mobilitylabs.emtmadrid.es/ (takes about 5 minutes)
-- Confirm your email
-- Open [app/src/main/java/com/example/airbus_quest/Credentials.kt](app/src/main/java/com/example/airbus_quest/Credentials.kt) and paste your own email and password in place of the placeholders:
+- Register and request credentials at https://mobilitylabs.emtmadrid.es/
+- Once approved, open [Credentials.kt](app/src/main/java/com/example/airbus_quest/Credentials.kt) and fill in your credentials:
 
 ```kotlin
 object Credentials {
-    const val EMT_EMAIL = "your_emt_email@example.com"
-    const val EMT_PASSWORD = "your_emt_password"
+    const val EMT_CLIENT_ID = "your_client_id_here"
+    const val EMT_PASSKEY = "your_passkey_here"
 }
 ```
 
-Yes, we know putting credentials directly in code isn't great. If EMT had approved our ClientId/PassKey we'd have used that instead — this is a temporary workaround for the school project deadline, not something we'd ever do in a real app.
+> Note: the approval process may take a few days. Without valid credentials, EMT bus stops will not load on the map.
 
 ### 3. Set up Firebase
 - Create a project at https://console.firebase.google.com

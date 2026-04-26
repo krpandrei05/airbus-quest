@@ -48,6 +48,16 @@ class MainActivity : AppCompatActivity() {
                         ?: username
             Log.d(TAG, "Username updated in drawer: $username")
         }
+        if (key == "detectionRadius") {
+            supportFragmentManager.fragments
+                .filterIsInstance<DashboardFragment>()
+                .firstOrNull()
+                ?.let { dashboard ->
+                    dashboard.lastLocation?.let { loc ->
+                        dashboard.triggerEmtFetch(loc.latitude, loc.longitude)
+                    }
+                }
+        }
     }
 
     private lateinit var prefs: SharedPreferences

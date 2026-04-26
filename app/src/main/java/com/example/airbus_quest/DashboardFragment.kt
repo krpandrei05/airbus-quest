@@ -50,7 +50,7 @@ class DashboardFragment : Fragment(), LocationListener {
     private val recommendations = mutableListOf<RecommendationItem>()
     private lateinit var recommendationAdapter: RecommendationAdapter
     private lateinit var ivAvatar: ImageView
-    private var lastLocation: Location? = null
+    internal var lastLocation: Location? = null
 
     private val locationPermissionCode = 2
 
@@ -280,16 +280,15 @@ class DashboardFragment : Fragment(), LocationListener {
             ContextCompat.getColorStateList(requireContext(), colorRes)
     }
 
-    private fun fetchNearbyEmtStops(lat: Double, lon: Double) {
-        val radius = 500
-        // val radius = requireActivity()
-        //    .getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
-        //    .getInt("detectionRadius", 500)
+    internal fun fetchNearbyEmtStops(lat: Double, lon: Double) {
+        val radius = requireActivity()
+            .getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
+            .getInt("detectionRadius", 500)
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val loginResp = RetrofitClient.emtService
-                    .login(Credentials.EMT_EMAIL, Credentials.EMT_PASSWORD)
+                    .login(Credentials.EMT_CLIENT_ID, Credentials.EMT_PASSKEY)
                     .execute()
 
                 val token = loginResp.body()?.data?.firstOrNull()?.accessToken ?: run {
@@ -297,10 +296,11 @@ class DashboardFragment : Fragment(), LocationListener {
                     return@launch
                 }
 
-                val stops = RetrofitClient.emtService
+                val stopsResp = RetrofitClient.emtService
                     .getStopsAroundLocation(token, lon, lat, radius)
                     .execute()
-                    .body()?.data ?: run {
+                Log.d(TAG, "EMT stops response: code=${stopsResp.code()}, body=${stopsResp.body()?.code}, desc=${stopsResp.body()?.description}, data size=${stopsResp.body()?.data?.size}")
+                val stops = stopsResp.body()?.data ?: run {
                     Log.e(TAG, "EMT stops fetch failed")
                     return@launch
                 }
@@ -315,6 +315,7 @@ class DashboardFragment : Fragment(), LocationListener {
                         allLines = stop.lines?.joinToString(", ") { it.label } ?: ""
                     )
                 }
+                db.stationDao().deleteAll()
                 db.stationDao().insertAll(stations)
                 Log.d(TAG, "EMT nearby stops saved: ${stations.size}")
 
@@ -322,6 +323,10 @@ class DashboardFragment : Fragment(), LocationListener {
                 Log.e(TAG, "EMT fetch error: ${e.message}")
             }
         }
+    }
+
+    fun triggerEmtFetch(lat: Double, lon: Double) {
+        fetchNearbyEmtStops(lat, lon)
     }
 
     private fun updateRecommendations(aqi: Int) {

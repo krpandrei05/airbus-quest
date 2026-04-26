@@ -10,8 +10,8 @@ interface EmtService {
     // Login with X-ClientId + passKey
     @GET("v1/mobilitylabs/user/login/")
     fun login(
-        @Header("email") email: String,
-        @Header("password") password: String
+        @Header("X-ClientId") clientId: String,
+        @Header("passKey") passKey: String
     ): Call<EmtLoginResponse>
 
     // Get stops around a GPS point within a radius

@@ -1,8 +1,8 @@
 package com.example.airbus_quest
 
 object Credentials {
-    // EMT Madrid API credentials
-    // Register at: https://mobilitylabs.emtmadrid.es/
-    const val EMT_EMAIL = "your_emt_email@example.com"
-    const val EMT_PASSWORD = "your_emt_password"
+    // EMT Madrid API — official credentials from https://mobilitylabs.emtmadrid.es/
+    // Register and request a ClientId/PassKey at the link
+    const val EMT_CLIENT_ID = "your_client_id_here"
+    const val EMT_PASSKEY = "your_passkey_here"
 }

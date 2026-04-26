@@ -95,7 +95,7 @@ class SettingsActivity : AppCompatActivity() {
 
         val seekRadius: SeekBar = findViewById(R.id.seekRadius)
         val tvRadiusValue: TextView = findViewById(R.id.tvRadiusValue)
-        val savedRadius = sharedPreferences.getInt("detectionRadius", 50)
+        val savedRadius = sharedPreferences.getInt("detectionRadius", 500)
         seekRadius.progress = savedRadius
         tvRadiusValue.text = getString(R.string.setting_radius_format, savedRadius)
         seekRadius.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {

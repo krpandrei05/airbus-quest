@@ -6,7 +6,7 @@ import retrofit2.http.Path
 
 interface OsrmService {
     // Returns a driving route between two coordinates
-    @GET("route/v1/driving/{startLon},{startLat};{endLon},{endLat}?overview=full&geometries=geojson")
+    @GET("route/v1/foot/{startLon},{startLat};{endLon},{endLat}?overview=full&geometries=geojson")
     fun getRoute(
         @Path("startLon") startLon: Double,
         @Path("startLat") startLat: Double,

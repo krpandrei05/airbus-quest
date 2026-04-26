@@ -319,6 +319,13 @@ class MapFragment : Fragment(), LocationListener {
         locationManager.removeUpdates(this)
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            viewModel.loadStations()
+        }
+    }
+
     @Deprecated("Deprecated in API")
     override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
     override fun onProviderEnabled(provider: String) {}
